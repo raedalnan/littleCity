@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
-import { KeyboardControls, Loader } from "@react-three/drei";
+import { Suspense } from "react";
+import { KeyboardControls, useProgress } from "@react-three/drei";
 import { PCFSoftShadowMap } from "three";
 import Experience from "./components/Experience.jsx";
 import { useGameStore } from "./store.js";
@@ -15,6 +16,56 @@ const keyboardMap = [
   { name: "mount", keys: ["KeyF"] },
 ];
 
+function SafeLoader() {
+  const { progress, active } = useProgress();
+
+  if (!active) return null;
+
+  const safeProgress = Number.isFinite(progress) ? Math.round(progress) : 0;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#111",
+        color: "#fff",
+        zIndex: 1000,
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div style={{ fontSize: "1.2rem", marginBottom: "10px" }}>
+        Loading {safeProgress}%
+      </div>
+
+      <div
+        style={{
+          width: "200px",
+          height: "4px",
+          background: "#333",
+          borderRadius: "2px",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            width: `${safeProgress}%`,
+            height: "100%",
+            background: "#fff",
+            transition: "width 0.2s ease",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
 function Hud() {
   const speed = useGameStore((state) => state.speed) ?? 0;
   const targetPosition = useGameStore((state) => state.targetPosition) ?? {
@@ -99,13 +150,15 @@ export default function App() {
             position: [15, 4, -5],
           }}
         >
-          <Experience />
+          <Suspense fallback={null}>
+            <Experience />
+          </Suspense>
         </Canvas>
 
         <Hud />
         <TouchControls />
       </KeyboardControls>
-      <Loader />
+      <SafeLoader />
     </>
   );
 }
