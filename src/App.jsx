@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { KeyboardControls } from "@react-three/drei";
+import { KeyboardControls, Loader } from "@react-three/drei";
 import { PCFSoftShadowMap } from "three";
 import Experience from "./components/Experience.jsx";
 import { useGameStore } from "./store.js";
@@ -88,20 +88,24 @@ const styles = {
 
 export default function App() {
   return (
-    <KeyboardControls map={keyboardMap}>
-      <Canvas
-        shadows={{ type: PCFSoftShadowMap }}
-        camera={{
-          fov: 45,
-          near: 0.1,
-          far: 200,
-          position: [15, 4, -5],
-        }}
-      >
-        <Experience />
-      </Canvas>
-      <Hud />
-      <TouchControls />
-    </KeyboardControls>
+    <>
+      <KeyboardControls map={keyboardMap}>
+        <Canvas
+          shadows={{ type: PCFSoftShadowMap }}
+          camera={{
+            fov: 45,
+            near: 0.1,
+            far: 200,
+            position: [15, 4, -5],
+          }}
+        >
+          <Experience />
+        </Canvas>
+
+        <Hud />
+        <TouchControls />
+      </KeyboardControls>
+      <Loader />
+    </>
   );
 }

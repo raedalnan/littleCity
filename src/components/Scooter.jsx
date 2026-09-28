@@ -25,7 +25,7 @@ const LEAN_DAMP = 6;
 
 export default function Scooter() {
   const scooter0 = useGLTF("./scooter.glb");
-  const scooter1 = useGLTF("./rider1.glb");
+  const scooter1 = useGLTF("./rider.glb");
 
   const [isPlayerNear, setIsPlayerNear] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
